@@ -113,6 +113,11 @@ citations were verified against Apple's live pages when this was published;
 if a guideline number and its current text disagree, Apple's page wins —
 open an issue or a PR.
 
+This playbook is also maintained from live submission experience: when a
+real build or review teaches a new lesson, the generalized pattern — check
+plus fix, never any app-specific detail — is added here so the checklist
+keeps growing.
+
 ## License
 
 The skill, checklist, and annex template are MIT — see `LICENSE`. Use it,
