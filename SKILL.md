@@ -438,9 +438,10 @@ submission day.
 
 **Third-party scanner pass.** Before submission (after step 4, before the
 submit in step 12), also run a deterministic static scanner against the app
-tree — we use
-[app-store-review-risk](https://github.com/Kofiloski/app-store-review-risk),
-whose comparison against this playbook added several checks to §A/§B. Its
+tree — run the bundled scanner in `scanner/` (vendored from upstream
+[app-store-review-risk](https://github.com/Kofiloski/app-store-review-risk);
+see `scanner/NOTICE.md`), whose comparison against this playbook added
+several checks to §A/§B. Its
 greps (permission strings, required-reason APIs, steering language,
 private-API patterns, placeholder text) catch a class this playbook
 otherwise states only in prose. Treat its findings as leads, not verdicts:

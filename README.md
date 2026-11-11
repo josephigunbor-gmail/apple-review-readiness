@@ -37,7 +37,8 @@ that clears it. A checklist that only tells you what's wrong is half a tool.
 | `SKILL.md` | The full playbook: when to run it, verdict rules, the official baseline (Section 0), machine validation (Section A), human-review readiness (Section B), and the submission-day run order (Section D). |
 | `CHECKLIST.md` | The same thing as a one-page scannable checklist, for a human on submission day. |
 | `ANNEX-TEMPLATE.md` | A blank per-app annex template — the per-app facts (IDs, stamp sources, demo access, app-specific traps) that belong in your **private** notes, not in a public repo. |
-| `LICENSE` | MIT. |
+| `scanner/` | A bundled static source scanner — **not ours**: app-store-review-risk by Kristijan Kofiloski, vendored under the MIT License (see "The bundled scanner" below and `scanner/NOTICE.md`). |
+| `LICENSE` | MIT — covers the skill, checklist, and annex template in this repo. The bundled scanner carries its own MIT license in `scanner/LICENSE`. |
 
 ## Install as an agent skill
 
@@ -63,17 +64,47 @@ The one rule that matters most: **take a build's verdict only from a fresh
 App Store Connect read** — never from the upload tool's success message.
 Upload responses lie by omission; the processed build resource doesn't.
 
-## Pair it with a source scanner
+## What's included — and whose it is
 
-This playbook verifies state and behavior. For a deterministic static scan of
-your *source* (permission strings, required-reason APIs, steering language,
-private-API patterns), pair it with
-[app-store-review-risk](https://github.com/Kofiloski/app-store-review-risk)
-by Kristijan Kofiloski — a complementary scanner whose checks informed several
-items in Sections A and B here. Run the scanner, verify each finding against
-your submitted target's own files (word-match hits in vendored code and
-comments are noise), record dismissals with reasons, then let this playbook
+Two tools, two authors:
+
+- **The skill, checklist, and annex template** (`SKILL.md`, `CHECKLIST.md`,
+  `ANNEX-TEMPLATE.md`) — this project's own work, MIT (see `LICENSE`).
+  They verify state and behavior: the documented baseline plus the
+  binary-validation layer.
+- **The bundled scanner** (`scanner/`) — **app-store-review-risk v0.3.3 by
+  Kristijan Kofiloski**, a deterministic static scanner for your *source*
+  (permission strings, required-reason APIs, steering language, private-API
+  patterns). It is included here under the MIT License — his copyright and
+  license text live in `scanner/LICENSE`, with provenance in
+  `scanner/NOTICE.md`. Several checks in Sections A and B were folded in
+  from comparing this playbook against it.
+
+## The bundled scanner
+
+Run it from this repo — no separate download needed:
+
+```bash
+# Option 1: install the bundled copy, then scan
+python3 -m pip install ./scanner
+app-store-review-risk /path/to/your-app --submitted-target YourAppTarget
+
+# Option 2: run it in place, nothing installed
+PYTHONPATH=scanner/src python3 -m app_store_review_risk /path/to/your-app
+```
+
+(Python 3.10+. The scanner also ships as a GitHub Action —
+`scanner/action/action.yml`; from a workflow in your own repo, check out
+this repo and reference it as a local action, e.g. `uses: ./scanner/action`.)
+
+Discipline when you run it: verify each finding against your submitted
+target's own files before acting — word-match hits in vendored code and
+comments are noise — record dismissals with reasons, then let this playbook
 make the final call.
+
+Upstream is the canonical source and this vendored copy may lag it: star or
+watch [Kofiloski/app-store-review-risk](https://github.com/Kofiloski/app-store-review-risk)
+for the latest version.
 
 ## Keeping it current
 
@@ -84,7 +115,10 @@ open an issue or a PR.
 
 ## License
 
-MIT — see `LICENSE`. Use it, fork it, ship your app.
+The skill, checklist, and annex template are MIT — see `LICENSE`. Use it,
+fork it, ship your app. The bundled scanner under `scanner/` is
+© Kristijan Kofiloski, likewise MIT — see `scanner/LICENSE` and
+`scanner/NOTICE.md`.
 
 ---
 
