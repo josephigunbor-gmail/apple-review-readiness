@@ -375,6 +375,34 @@ Each check is paired with the fix that clears it.
   block carries a `.buttonStyle(`), and put "tap every hub tile;
   each destination presents" on the on-device checklist for every
   build.
+- [ ] **Post-login screens rendered at real width and the largest
+  text size.** The signed-out cold-start check says nothing about
+  the app's real screens. Field failure: a design pass shipped a
+  three-across stat-tile row inside a padded panel — ≈72pt text
+  columns at phone width — which read fine at the default text size
+  but hyphenated every label mid-word and squeezed the values at
+  accessibility Dynamic Type sizes, the size the owner actually
+  uses. No check had ever rendered that screen at device width
+  with real content.
+  **Fix:** for every fixed-column layout, do the column math at the
+  smallest supported width (page + panel + tile padding accounted)
+  against the longest word at the largest text size — or render it.
+  Branch on the accessibility size class: tiles stack full-width
+  and header controls drop to their own line instead of squeezing.
+- [ ] **Interactive controls must visibly respond.** Field failure:
+  a forecast slider moved, its percentage label updated, and every
+  figure it fed stayed frozen — a data gate upstream never enabled,
+  because its selection logic silently discarded the user's real
+  qualifying data (the intersection of "latest periods with data"
+  and "user-confirmed periods" kept one period where five
+  confirmations existed). The control looked alive and was dead.
+  Mirroring a reference implementation is no defense when the
+  reference carries the same defect.
+  **Fix:** verify gate logic against the production data state, not
+  fixtures; on the device pass, move every slider/stepper/picker
+  and watch a value it feeds actually change. A genuinely gated
+  control ships disabled, with the reason stated on screen and a
+  working in-app path to satisfy the gate.
 - [ ] **Share/action sheets present immediately on tap.** Never gate
   presenting a share sheet on an asynchronous download (e.g. fetching a
   cover image first) — on a slow connection the tap looks dead, with no

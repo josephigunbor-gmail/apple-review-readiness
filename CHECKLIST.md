@@ -59,6 +59,8 @@ only from fresh App Store Connect reads — never from an upload response.
 - [ ] Every `UIBackgroundModes` entry maps to a visible feature and is explained in Review Notes
 - [ ] No screen kicks the user out to a browser; password reset finishes in-app
 - [ ] Every hub/grid tile opens its destination on a real device tap — press-feedback ButtonStyles sit on Buttons only, never on NavigationLinks (grep-verified); a tile that renders with live data can still be dead
+- [ ] Post-login screens rendered at the smallest device width AND the largest accessibility text size — no mid-word hyphenation, no squeezed tile columns; fixed-column rows stack at accessibility sizes
+- [ ] Every slider/stepper/picker visibly changes a value it feeds on the device pass; a data-gated control is disabled with its reason on screen and a working in-app path to satisfy the gate (gate logic verified against real production data, not fixtures)
 - [ ] Share/action sheets appear immediately on tap — never gated on an async download; the sheet can never open empty
 - [ ] Share payload is one combined text item (pitch + bio + hashtags + link) — separate text/URL items let receiving apps drop the text; verify in Messenger/WhatsApp, not just Messages
 - [ ] Health apps: self-checks never presented as diagnosis; "not a substitute for professional care" + crisis info in the listing; crisis features work signed-out and offline
