@@ -40,6 +40,7 @@ only from fresh App Store Connect reads — never from an upload response.
 - [ ] Required-reason APIs the app's own code uses (UserDefaults, file timestamps, disk space, boot time) are declared in the app's OWN PrivacyInfo.xcprivacy — SDK manifests don't substitute
 - [ ] Every purpose string is specific to its visible feature — no short or generic filler ("needed", "required", "we need access")
 - [ ] ATT/IDFA APIs in app code ⇒ `NSUserTrackingUsageDescription` + tracking declared in labels; none in code ⇒ labels say no tracking
+- [ ] Every library the app links is present in the shipped binary — a library can compile yet be dropped at the link step; verify its symbols in the final binary on every build
 - [ ] Fresh `GET /v1/builds` read shows this build VALID (no `sort` param — the endpoint rejects it)
 - [ ] Build explicitly attached to its TestFlight group; group re-read confirms it
 
@@ -57,6 +58,8 @@ only from fresh App Store Connect reads — never from an upload response.
 - [ ] No external-purchase steering language ("subscribe on the web", "Stripe checkout", "billing portal", …) — or the current storefront rules are checked for every enabled storefront
 - [ ] Every `UIBackgroundModes` entry maps to a visible feature and is explained in Review Notes
 - [ ] No screen kicks the user out to a browser; password reset finishes in-app
+- [ ] Share/action sheets appear immediately on tap — never gated on an async download; the sheet can never open empty
+- [ ] Share payload is one combined text item (pitch + bio + hashtags + link) — separate text/URL items let receiving apps drop the text; verify in Messenger/WhatsApp, not just Messages
 - [ ] Health apps: self-checks never presented as diagnosis; "not a substitute for professional care" + crisis info in the listing; crisis features work signed-out and offline
 - [ ] Voice features: no voiceprint/biometric derivation without written notice + release; live-only features record and store nothing
 - [ ] Vendored SDK patches verified at the binary level on this exact build (calibrated check, not source review)

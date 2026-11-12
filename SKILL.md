@@ -256,6 +256,14 @@ fix that clears it.
   prompt timing must be deliberate, and the privacy label must declare
   tracking. No hits ⇒ the labels must say no tracking. Mismatched labels are
   a rejection and a trust problem; align code, manifest, and labels.
+- [ ] **Linked libraries present in the shipped binary.** A library can
+  compile yet be dropped at the link step — the build stays green while the
+  feature it powers crashes on first use.
+  **Fix:** write a binary-level check for the shipped executable (symbol
+  presence for each linked library/framework the app depends on), calibrate
+  it against a known-good and a known-bad build, and re-run it on **every**
+  build. A library present in source and absent in the binary is a failed
+  gate, not a warning.
 - [ ] **Verdict from a fresh read.** Poll `GET /v1/builds` (the builds
   endpoint **rejects `sort` parameters** — never send one) until the
   processed build resource for the exact build number reads VALID.
@@ -352,6 +360,24 @@ Each check is paired with the fix that clears it.
   with a clear return path, and finish account flows (especially password
   reset) natively. This is also the 4.2 answer: the app is plainly more
   than the website in a wrapper.
+- [ ] **Share/action sheets present immediately on tap.** Never gate
+  presenting a share sheet on an asynchronous download (e.g. fetching a
+  cover image first) — on a slow connection the tap looks dead, with no
+  spinner and no feedback. A two-step presentation flag that can be
+  consumed while still empty desyncs and kills every later tap too.
+  **Fix:** preload any share asset quietly in the background when the
+  screen opens (with a time limit), and present the sheet immediately on
+  tap with whatever is ready — image if it loaded, text + link if it
+  didn't. The sheet must never be able to open empty.
+- [ ] **Share payload is one combined message.** Handing other apps
+  separate text, link, and image items lets the receiving app pick the
+  item type it prefers — most pick the bare link and silently drop the
+  text, so hashtags, bio, and pitch never arrive.
+  **Fix:** assemble the pitch, bio, hashtags, then the link into a single
+  text item, with the image as its own item beside it. Verify the share
+  end to end in a receiving app that is *not* Apple's Messages (which
+  merges everything and hides the bug) — e.g. Messenger or WhatsApp —
+  and confirm text, hashtags, and link arrive together.
 - [ ] **Health claims disciplined.** Medical and mental-health apps get
   1.4.1 scrutiny.
   **Fix:** disclose data and methodology; present validated questionnaires
