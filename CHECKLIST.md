@@ -58,6 +58,7 @@ only from fresh App Store Connect reads — never from an upload response.
 - [ ] No external-purchase steering language ("subscribe on the web", "Stripe checkout", "billing portal", …) — or the current storefront rules are checked for every enabled storefront
 - [ ] Every `UIBackgroundModes` entry maps to a visible feature and is explained in Review Notes
 - [ ] No screen kicks the user out to a browser; password reset finishes in-app
+- [ ] Every hub/grid tile opens its destination on a real device tap — press-feedback ButtonStyles sit on Buttons only, never on NavigationLinks (grep-verified); a tile that renders with live data can still be dead
 - [ ] Share/action sheets appear immediately on tap — never gated on an async download; the sheet can never open empty
 - [ ] Share payload is one combined text item (pitch + bio + hashtags + link) — separate text/URL items let receiving apps drop the text; verify in Messenger/WhatsApp, not just Messages
 - [ ] Health apps: self-checks never presented as diagnosis; "not a substitute for professional care" + crisis info in the listing; crisis features work signed-out and offline

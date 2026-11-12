@@ -360,6 +360,21 @@ Each check is paired with the fix that clears it.
   with a clear return path, and finish account flows (especially password
   reset) natively. This is also the 4.2 answer: the app is plainly more
   than the website in a wrapper.
+- [ ] **Every hub/grid tile destination actually opens.** A tile can
+  render perfectly — live data, correct counts — and still never
+  navigate. The failure mode seen in the field: a press-feedback
+  `ButtonStyle` (scale/shrink on press) applied to a `NavigationLink`
+  inside a grid embedded in a list row; the custom style replaces the
+  link's internal button machinery and the tap never becomes a
+  navigation on device. Static tests and green builds do not catch
+  it — the screen looks right in every screenshot.
+  **Fix:** style belongs on `Button`s only, never on a
+  `NavigationLink`. Build hub tiles as `Button`s that append to a
+  `NavigationStack` path (or otherwise drive navigation explicitly),
+  enforce the construction statically (grep: no `NavigationLink`
+  block carries a `.buttonStyle(`), and put "tap every hub tile;
+  each destination presents" on the on-device checklist for every
+  build.
 - [ ] **Share/action sheets present immediately on tap.** Never gate
   presenting a share sheet on an asynchronous download (e.g. fetching a
   cover image first) — on a slow connection the tap looks dead, with no
