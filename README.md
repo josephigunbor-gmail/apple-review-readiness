@@ -37,6 +37,7 @@ that clears it. A checklist that only tells you what's wrong is half a tool.
 | `SKILL.md` | The full playbook: when to run it, verdict rules, the official baseline (Section 0), machine validation (Section A), human-review readiness (Section B), and the submission-day run order (Section D). |
 | `CHECKLIST.md` | The same thing as a one-page scannable checklist, for a human on submission day. |
 | `ANNEX-TEMPLATE.md` | A blank per-app annex template — the per-app facts (IDs, stamp sources, demo access, app-specific traps) that belong in your **private** notes, not in a public repo. |
+| `checker/` | **Our own** static checker (`review_check.py`): first-party code only, report-only, every finding cited to file:line. See "Our checker" below and `checker/README.md`. |
 | `scanner/` | A bundled static source scanner — **not ours**: app-store-review-risk by Kristijan Kofiloski, vendored under the MIT License (see "The bundled scanner" below and `scanner/NOTICE.md`). |
 | `LICENSE` | MIT — covers the skill, checklist, and annex template in this repo. The bundled scanner carries its own MIT license in `scanner/LICENSE`. |
 
@@ -72,6 +73,9 @@ Two tools, two authors:
   `ANNEX-TEMPLATE.md`) — this project's own work, MIT (see `LICENSE`).
   They verify state and behavior: the documented baseline plus the
   binary-validation layer.
+- **Our checker** (`checker/`) — also this project's own work, MIT.
+  A first-party-only, report-only static scanner; see "Our checker"
+  below.
 - **The bundled scanner** (`scanner/`) — **app-store-review-risk v0.3.3 by
   Kristijan Kofiloski**, a deterministic static scanner for your *source*
   (permission strings, required-reason APIs, steering language, private-API
@@ -79,6 +83,32 @@ Two tools, two authors:
   license text live in `scanner/LICENSE`, with provenance in
   `scanner/NOTICE.md`. Several checks in Sections A and B were folded in
   from comparing this playbook against it.
+
+## Our checker
+
+`checker/review_check.py` is this project's own scanner, written to the
+discipline the rest of this repo preaches:
+
+```bash
+python3 checker/review_check.py /path/to/your-app
+```
+
+- **First-party code only** — vendored SDK checkouts, test targets, and
+  CI config are excluded by default (`--include-vendor` overrides).
+  Word-match hits in code you didn't write are how scanners manufacture
+  findings.
+- **Report only** — it never blocks a build or a submission, and its
+  exit code is always 0. Severities top out at "warning"; every finding
+  cites file:line, the guideline, and a concrete fix.
+- **Honest about its blind spots** — every report ends with a
+  "not statically checkable" section (demo account, listing, screenshots,
+  age ratings, IAP state) rather than letting silence read as a pass.
+
+Five rules in v1: privacy-manifest vs required-reason API usage,
+account deletion, Sign in with Apple alongside social sign-in, restore
+purchases (only where products are actually restorable), and the
+in-app privacy policy link. Full rationale in `checker/README.md`.
+Ours, MIT — see `LICENSE`.
 
 ## The bundled scanner
 
